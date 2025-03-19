@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Assignment 2 Natalia NB</title>
-  <link rel="stylesheet" href="style.css"/> 
+  <link rel="stylesheet" href="style.css" />
   <script type="module" src="script.js"></script>
 </head>
 
@@ -92,121 +92,195 @@
     </section>
   </div>
 
-<div id="explanation">
-  <h1>JavaScript Explanation for Tier List Project</h1>
-    
-  <h2>Overview</h2>
-  <p>This JavaScript file enables a <strong>drag-and-drop tier list</strong> where users can upload images, drag them into ranked categories, and save their customized tier list as an image.</p>
+  <div class="explanation">
+    <h1>JavaScript Explanation for Tier List Project</h1>
 
-  <h2>Query Selectors and Element References</h2>
-  <pre>
-<code>
-const $ = el => document.querySelector(el)
-const $$ = el => document.querySelectorAll(el)
-</code>
-  </pre>
-  <p>These functions act as shorthand for selecting elements in the document:</p>
-  <ul>
+    <h2>What Does This Code Do?</h2>
+    <p>
+      This code creates a <strong>Drag & Drop Tier List Maker</strong>. It allows users to:
+    </p>
+    <ul>
+      <li>Upload images from their computer.</li>
+      <li>Drag and drop those images into different tiers (like S, A, B, etc.).</li>
+      <li>Reset the tier list to its original state.</li>
+      <li>Save the tier list as an image.</li>
+    </ul>
+
+    <h2>Query Selectors and Element References</h2>
+    <div class="code-block">
+      <ul>
+        <li><code>const $ = el => document.querySelector(el)</code></li>
+        <li><code>const $$ = el => document.querySelectorAll(el)</code></li>
+
+      </ul>
+    </div>
+    <p>These functions act as shorthand for selecting elements in the document:</p>
+    <ul>
       <li><code>$()</code> selects the <strong>first</strong> matching element.</li>
       <li><code>$$()</code> selects <strong>all</strong> matching elements as a NodeList.</li>
-  </ul>
+    </ul>
 
-  <h2>Getting DOM Elements</h2>
-  <pre>
-<code>
-const imageInput = $('#image-input')
-const itemsSection = $('#selector-items')
-const resetButton = $('#reset-tier-button')
-const saveButton = $('#save-tier-button')
-</code>
-  </pre>
-  <p>These variables store references to important elements in the document.</p>
+    <h2>Getting DOM Elements</h2>
+    <div class="code-block">
 
-  <h2>Creating and Adding Images</h2>
-  <pre>
-<code>
-function createItem(src) {
-const imgElement = document.createElement('img')
-imgElement.draggable = true
-imgElement.src = src
-imgElement.className = 'item-image'
+      <ul>
 
-imgElement.addEventListener('dragstart', handleDragStart)
-imgElement.addEventListener('dragend', handleDragEnd)
+        <li><code>const imageInput = $('#image-input')</code></li>
+        <li><code>const itemsSection = $('#selector-items')</code></li>
+        <li><code>const resetButton = $('#reset-tier-button')</code></li>
+        <li><code>const saveButton = $('#save-tier-button')</code></li>
+      </ul>
+    </div>
+    <h4>Key elements selected:</h4>
 
-itemsSection.appendChild(imgElement)
-return imgElement
-}
-</code>
-  </pre>
-  <p>This function generates an image element, makes it draggable, and appends it to the available items section.</p>
+    <ul>
+      <li><code>imageInput:</code> File input for uploading images.</li>
+      <li><code>itemsSection:</code> Section where images are displayed for dragging.</li>
+      <li><code>resetButton:</code> Button to reset the tier list.</li>
+      <li><code>saveButton:</code> Button to save the tier list as an image.</li>
+    </ul>
 
-  <h2>Handling Image Uploads</h2>
-  <pre>
-<code>
-function useFilesToCreateItems(files) {
-if (files && files.length > 0) {
-  Array.from(files).forEach(file => {
-    const reader = new FileReader()
-    reader.onload = (eventReader) => {
-      createItem(eventReader.target.result)
-    }
-    reader.readAsDataURL(file)
-  })
-}
-}
-</code>
-  </pre>
-  <p>This function reads image files, converts them to data URLs, and creates draggable image elements.</p>
+    <h2>Creating and Adding Images</h2>
+    <p>The <code>createItem</code> function creates an image element and appends it to the <code>itemsSection</code>. It
+      also adds drag-and-drop event listeners to the image:</p>
+    <div class="code-block">
+      <ul>
+        <li><code>function createItem(src) {</code></li>
+        <li><code>const imgElement = document.createElement('img')</code></li>
+        <li><code>imgElement.draggable = true</code></li>
+        <li><code>imgElement.src = src</code></li>
+        <li><code>imgElement.className = 'item-image'</code></li>
 
-  <h2>Drag-and-Drop Functionality</h2>
-  <pre>
-<code>
-let draggedElement = null
-let sourceContainer = null
-</code>
-  </pre>
-  <p>These variables store the element being dragged and its original container.</p>
+        <li><code>imgElement.addEventListener('dragstart', handleDragStart)</code></li>
+        <li><code>imgElement.addEventListener('dragend', handleDragEnd)</code></li>
 
-  <h2>Reset Tier List</h2>
-  <pre>
-<code>
-resetButton.addEventListener('click', () => {
-const items = $$('.tier .item-image')
-items.forEach(item => {
-  item.remove()
-  itemsSection.appendChild(item)
-})
-})
-</code>
-  </pre>
-  <p>This function removes images from the tier list and places them back in the original section.</p>
+        <li><code>itemsSection.appendChild(imgElement)</code></li>
+        <li><code>return imgElement</code></li>
+        <li><code>}</code></li>
 
-  <h2>Save Tier List as an Image</h2>
-  <pre>
-<code>
-saveButton.addEventListener('click', () => {
-const tierContainer = $('.tier')
-import('https://cdn.jsdelivr.net/npm/html2canvas-pro@1.5.8/+esm')
-  .then(({ default: html2canvas }) => {
-    html2canvas(tierContainer).then(canvas => {
-      const imgURL = canvas.toDataURL('image/png')
-      const downloadLink = document.createElement('a')
-      downloadLink.download = 'tier.png'
-      downloadLink.href = imgURL
-      downloadLink.click()
-    })
-  })
-})
-</code>
-  </pre>
-  <p>This function captures the tier list and saves it as an image using <code>html2canvas</code>.</p>
-</div>
+      </ul>
+    </div>
+
+    <h2>Handling Image Uploads</h2>
+    <p>The <code>useFilesToCreateItems</code> function reads uploaded files and creates images using
+      <code>createItem:</code>
+    </p>
+    <div class="code-block">
+      <ul>
+        <li><code>function useFilesToCreateItems(files) {</code></li>
+        <li><code>if (files && files.length > 0) {</code></li>
+        <li><code>Array.from(files).forEach(file => {</code></li>
+        <li><code>const reader = new FileReader()</code></li>
+        <li><code>reader.onload = (eventReader) => {</code></li>
+        <li><code>createItem(eventReader.target.result)</code></li>
+        <li><code> }</code></li>
+        <li><code> reader.readAsDataURL(file)</code></li>
+        <li><code>})</code></li>
+        <li><code>}</code></li>
+        <li><code>}</code></li>
+      </ul>
+    </div>
+
+    <p>When a file is uploaded via <code>imageInput</code>, the change event triggers
+      <code>useFilesToCreateItems:</code>
+    </p>
+    <div class="code-block">
+      <ul>
+        <li><code>imageInput.addEventListener('change', () => {</code></li>
+        <li><code>useFilesToCreateItems(imageInput.files)</code></li>
+        <li><code>})</code></li>
+      </ul>
+    </div>
+
+
+    <h2>Drag-and-Drop Functionality</h2>
+
+    <p>The code enables drag-and-drop for images between rows and the <code>itemsSection.</code></p>
+    <h4>Key Variables</h4>
+    <ul>
+      <li><code>draggedElement:</code> The image being dragged.</li>
+      <li><code>sourceContainer:</code> The container where the dragged image originated.</li>
+      <h5>Event Handlers</h5>
+      <li><code>handleDragStart:</code> Sets the dragged element and its source container.</li>
+      <li><code>handleDragEnd:</code> Resets draggedElement and sourceContainer.</li>
+      <li> <code>handleDragOver:</code> Allows dropping by preventing the default behavior and shows a preview of the
+        dragged image.
+      </li>
+      <li><code>handleDrop:</code> Moves the dragged image to the drop target.</li>
+      <li><code>handleDragLeave:</code> Removes the drag-over styling and preview.</li>
+    </ul>
+
+    <div class="code-block">
+      <ul>
+        <li><code>function handleDragStart(event) {</code></li>
+        <li><code>draggedElement = event.target</code></li>
+        <li><code>sourceContainer = draggedElement.parentNode</code></li>
+        <li><code>event.dataTransfer.setData('text/plain', draggedElement.src)</code></li>
+        <li><code> }</code></li>
+
+        <li><code> function handleDrop(event) {
+        <li><code> event.preventDefault()</code></li>
+        <li><code>if (sourceContainer && draggedElement) {</code></li>
+        <li><code>sourceContainer.removeChild(draggedElement)</code></li>
+        <li><code>}</code></li>
+        <li><code>  const src = event.dataTransfer.getData('text/plain')</code></li>
+        <li><code>const imgElement = createItem(src)</code></li>
+        <li><code> event.currentTarget.appendChild(imgElement)</code></li>
+        <li><code> }</code></li>
+        <li><code>}</code></li>
+
+      </ul>
+    </div>
+    </code>
+    <p>The code also supports dragging files directly from the desktop:</p>
+    <ul>
+      <li><code>handleDragOverFromDesktop:</code> Adds a visual indicator when files are dragged over.</li>
+      <li><code>handleDropFromDesktop:</code> Reads and adds the dropped files.</li>
+    </ul>
+
+
+    <h2>Reset Tier List</h2>
+    <p>The <code>resetButton</code> moves all images back to the original section <code>itemsSection:</code></p>
+    <div class="code-block">
+
+      <ul>
+        <li><code>resetButton.addEventListener('click', () => {</code></li>
+        <li><code>const items = $$('.tier .item-image')</code></li>
+        <li><code>items.forEach(item => {</code></li>
+        <li><code>item.remove()</code></li>
+        <li><code>itemsSection.appendChild(item)</code></li>
+        <li><code>})</code></li>
+        <li><code>})</code></li>
+      </ul>
+    </div>
+
+    <h2>Save Tier List as an Image</h2>
+    <p>The <code>saveButton</code> captures the tier list as an image using the <code>html2canvas</code> library:</p>
+    <div class="code-block">
+      <ul>
+        <li><code>saveButton.addEventListener('click', () => {</code></li>
+        <li><code>const tierContainer = $('.tier')</code></li>
+        <li><code>import('https://cdn.jsdelivr.net/npm/html2canvas-pro@1.5.8/+esm')</code></li>
+        <li><code>.then(({ default: html2canvas }) => {</code></li>
+        <li><code>html2canvas(tierContainer).then(canvas => {</code></li>
+        <li><code> const imgURL = canvas.toDataURL('image/png')</code></li>
+        <li><code> const downloadLink = document.createElement('a')</code></li>
+        <li><code> downloadLink.download = 'tier.png'</code></li>
+        <li><code> downloadLink.href = imgURL</code></li>
+        <li><code> downloadLink.click()</code></li>
+        <li><code>})</code></li>
+        <li><code> })</code></li>
+        <li><code>})</code></li>
+      </ul>
+    </div>
+    <p>It renders the .tier container into a canvas.
+      The canvas is converted to a PNG image and downloaded.</p>
+  </div>
 
   <footer id="bottom-footer">
     <p>Created by Natalia NB</p>
   </footer>
-  
+
 </body>
 
 </html>
